@@ -17,6 +17,8 @@ ebay_auth = {
 #                             environ['database_password'],
 #                             environ['host'])
 
+environ['DATABASE_URL'] = 'postgresql://fcxbxawnnsvauw:44c5b88cda334ae537fb1713883480f3b46fdae73817f0dbfcf8f18580de0605@ec2-54-81-126-150.compute-1.amazonaws.com:5432/d6gjvlbk3cg3gi'
+
 environ['AUTH0_DOMAIN'] = 'fs-webdev.eu.auth0.com'
 environ['ALGORITHMS'] = 'RS256'
 environ ['API_AUDIENCE'] = 'coffeeshop'

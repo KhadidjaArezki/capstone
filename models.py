@@ -8,7 +8,7 @@ import json
 
 # database_name = environ['production_database_name']
 # database_path = '{}/{}'.format(environ['database_path'], database_name)
-database_path = os.environ['DATABASE_URL']
+database_path = environ['DATABASE_URL']
 
 db = SQLAlchemy()
 
