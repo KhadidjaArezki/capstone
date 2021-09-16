@@ -34,5 +34,5 @@ urllib3==1.26.6
 Werkzeug==1.0.1
 xmltodict==0.12.0
 gunicorn==20.1.0
-Flask-Script==2.0.6
+Flask-Script==1.0.0
 psycopg2-binary==2.9.1
