@@ -13,4 +13,4 @@ if __name__ == '__main__':
     manager.run()
 
 # https://pricelee.herokuapp.com/ | https://git.heroku.com/pricelee.git
-# DATABASE_URL: postgres://lhuslnebcducvl:30080033264aab1a671c418276bd46d55a041557aa222e134c680409390ffcb6@ec2-44-198-151-32.compute-1.amazonaws.com:5432/d6olfm5pj49u4p
+# DATABASE_URL: postgres://fcxbxawnnsvauw:44c5b88cda334ae537fb1713883480f3b46fdae73817f0dbfcf8f18580de0605@ec2-54-81-126-150.compute-1.amazonaws.com:5432/d6gjvlbk3cg3gi
