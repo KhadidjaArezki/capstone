@@ -7,7 +7,7 @@ ebay_auth = {
     'devid': '242e8a01-6fe5-4588-8ccb-7c4eb6e5618b'
 }
 
-environ['PROD_DATABASE_URL'] = 'postgresql://fcxbxawnnsvauw:44c5b88cda334ae537fb1713883480f3b46fdae73817f0dbfcf8f18580de0605@ec2-54-81-126-150.compute-1.amazonaws.com:5432/d6gjvlbk3cg3gi'
+environ['PROD_DATABASE_URL'] = 'postgresql://ypuckaivehndeu:e364580fc8e730ec27e1e3d2490b027aadf897967b803219ae96fcc3d2dd94a2@ec2-3-218-149-60.compute-1.amazonaws.com:5432/d78s1bnja9kpsd'
 environ['TEST_DATABASE_URL'] = 'postgresql://postgres:12345@localhost:5432/capstone'
 
 environ['AUTH0_DOMAIN'] = 'fs-webdev.eu.auth0.com'
