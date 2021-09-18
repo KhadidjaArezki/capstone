@@ -1,6 +1,6 @@
 # Full Stack Developer Nano Degree Capstone Project
 
-### Pricelee
+# Pricelee
 
 Pricelee is a price tracking website. It allows you to search products from popular online stores and to create alerts for the products you want to track after you sign up. You can use filters to improve the search and get more specific results. The store manager can add more filters to the frontend as the developer completes their implementation and testing.
 
@@ -12,7 +12,7 @@ The landing page displays sponsered products added by the admin only.
 
 The website is hosted on [https://pricelee.herokuapp.com/](https://pricelee.herokuapp.com/)
 
-### Frontend
+# Frontend
 
 - This is a single page application. The frontend consists of a single html template, - rendered by the Jinja2 engine - in the templates folder, in addition to css and javascript folders in the static folder. Most of the functionality is written in vanilla javascript and occasionally JQuery. 
 - `index.html` is a template downloaded and adapted from [https://startbootstrap.com/](https://startbootstrap.com/). The design is made with the Bootstrap 5 library.
@@ -32,7 +32,7 @@ Below are the sources for code snippets I adapted from the internet:
 
 - JQuery and auth0-spa-js links is included in the `index.html` file, and Bootstrap is included in the css folder.
 
-### Backend
+# Backend
 
 The backend main modules are: app.py, modules.py, and request_ebay.py
 
@@ -82,14 +82,14 @@ The `--reload` flag will detect file changes and restart the server automaticall
 
 - Some endpoints require permissions which are defined in roles. Those roles are assumed by certain users through your Auth0 api.
 
-# Store Administrator
+### Store Administrator
 
 - Can add sponsered deals to the landing page and add search filters.
 - Permissions: 
     - `post:deals`
     - `post:filters`
 
-# Store Manager
+### Store Manager
 
 - Can add search filters to enhance search results precision.
 - Permissions: 
@@ -109,10 +109,10 @@ The `--reload` flag will detect file changes and restart the server automaticall
 - PATCH '/alerts'
 - DELETE '/alerts'
 
-# GET '/auth_config'
+### GET '/auth_config'
 - Fetches auth_config.json file and sends it to the frontend to format the Auth0 `/authorize` request.
 
-# GET 'filters'
+### GET 'filters'
 - Fetches available filters from the database
 - Returns a list of filters.
 ``` 
@@ -122,12 +122,12 @@ The `--reload` flag will detect file changes and restart the server automaticall
     }
 ```
 
-# POST '/user'
+### POST '/user'
 - Looks up the current authenticated user and adds if not present.
 - Sample request: curl 'http://127.0.0.1:5000/user' -X POST -H 'Content-Type: application/json' -d '{"user_id": "112442572274179169362",
     "user_name": "khadidjaarezki999", "email": "khadidjaarezki999@gmail.com"}'
 
-# POST 'alerts'
+### POST 'alerts'
 - Fetches current authenticated user's paginated alerts from the database
 - The user must be logged in to send the request.
 - Returns a list of paginated alert objects.
@@ -152,7 +152,7 @@ The `--reload` flag will detect file changes and restart the server automaticall
     "total_items": len(alerts)
 }
 ```
-# POST '/recent_alerts'
+### POST '/recent_alerts'
 - Fetches current authenticated user's most recently created alerts from the database.
 - The user must be logged in to send the request.
 - Returns a list of paginated alert objects filtered by their creation date.
@@ -178,23 +178,23 @@ The `--reload` flag will detect file changes and restart the server automaticall
 }
 ```
 
-# POST '/alerts/add'
+### POST '/alerts/add'
 - Creates a new alert for the submitted product and stores it.
 - The user must be logged in to send the request.
 - If the alert product is not stored, it adds it to the database.
 - Sample request: curl 'http://127.0.0.1:5000/alerts/add' -X POST -H 'Content-Type: application/json' -d '{"product_id": "110537674650", "product_image": "", "product_name": "Highlights Hidden Pictures Puzzle Collection: 10-book Wedge", "product_link": "https://cgi.sandbox.ebay.com/Highlights-Hidden-Pictures-Puzzle-Collection-10-book-Wedge-/110537674650", "product_price": "USD 24.99", "product_store": "ebay", "desired_price": "20", "user_id": "112442572274179169362"}'
 
-# PATCH '/alerts'
+### PATCH '/alerts'
 - Updates an alert filtered by the provided id
 - The user must be logged in to send the request.
 - Sample request: curl 'http://127.0.0.1:5000/alerts' -X PATCH -H 'Content-Type: application/json' -d '{"user_id": "112442572274179169362", "new_desired_price": "22", "alert_id": "1"}'
 
-# DELETE '/alerts'
+### DELETE '/alerts'
 - Deletes an alert filtered by the provided the id
 - The user must be logged in to send the request.
 - Sample request: curl 'http://127.0.0.1:5000/alerts' -X DELETE -H 'Content-Type: application/json' -d '{"alert_id": "2", "user_id": "112442572274179169362"}'
 
-# POST '/search'
+### POST '/search'
 - Sends request to online stores to search for products by keywords and/or filters.
 - Returns a list of product objects that match the search.
 - Sample request: curl 'http://127.0.0.1:5000/search' -X POST -H 'Content-Type: application/json' -d '{"keywords": "book", "filters": "{"location": "", "categoryId": "", "store": "ebay", "min_price": "", "max_price": ""}",   "page_number": "1", "user_id": "112442572274179169362"}'
@@ -226,14 +226,14 @@ The `--reload` flag will detect file changes and restart the server automaticall
 }
 ```
 
-# POST '/filters'
+### POST '/filters'
 - Adds new search filters to the database
 - Requires permission: `post:filters`
 - Sample request: curl 'http://127.0.0.1:5000/filters' -X POST -H '{"Content-Type": "application/json", "Authorization": "Bearer {manager_token}"}' -d '{'filter': 'price'}'
 
-# POST '/deals'
+### POST '/deals'
 - Adds a new sponsered deal to the database.
 - Requires permission: `post:deals`
 - Sample request: curl 'http://127.0.0.1:5000/deals' -X POST -H '{"Content-Type": "application/json", "Authorization": "Bearer {admin_token}"}' -d '{'deal_name': 'Dell 27 Curved Gaming Monitor - S2722DGM Featuring FreesSync Premium', 'deal_link': 'https://deals.dell.com/en-us/productdetail/ag5n', 'deal_image': 'https://snpi.dell.com/snp/images/products/large/en-us~210-AZZP/210-AZZP.jpg', 'deal_price': '299.99', 'deal_currency': 'USD', 'deal_store': 'Dell'}'
 
-### Authors: Khadidja Arezki
+## Authors: Khadidja Arezki
