@@ -10,6 +10,8 @@ After a user is authenticated, they can add alerts, edit and delete them. They c
 
 The landing page displays sponsered products added by the admin only.
 
+The website is hosted on [https://pricelee.herokuapp.com/](https://pricelee.herokuapp.com/)
+
 ### Frontend
 
 - This is a single page application. The frontend consists of a single html template, - rendered by the Jinja2 engine - in the templates folder, in addition to css and javascript folders in the static folder. Most of the functionality is written in vanilla javascript and occasionally JQuery. 
