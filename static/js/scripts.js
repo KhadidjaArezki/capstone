@@ -13,7 +13,6 @@ let userProfile = document.getElementById('user-profile');
 let userAlerts = document.getElementById('user-alerts');
 let recentAlerts = document.getElementById('recent-alerts');
 let searchResults = document.getElementById('search-results');
-// let searchButton = document.getElementById("button-search");
 
 window.onload = async () => {
   getFilters();
@@ -21,7 +20,6 @@ window.onload = async () => {
   await processLoginState();
   login_button.onclick = login;
   logout_button.onclick = logout;
-//   searchButton.onclick = getSearchResults;
   updateUI();
 };
 
@@ -450,7 +448,6 @@ const showItems = (jsonResponse, itemType, page, data) => {
         }
         else {
             $('#pagination').show();
-            // $('#paginable').hide();
             paginateResponse(totalItems, page, data);
         }
     }
@@ -502,8 +499,6 @@ const greetManager = () => {
 const addFilter = () => {
     const filter = $('#filter-input').val();
     if (filter !== 'Select...') {
-        // const filterToAdd = document.getElementById(filter);
-        // filterToAdd.classList.remove("hidden");
         const request = new Request('/filters', {
             method: 'POST',
             body: JSON.stringify({'filter': filter}),
@@ -566,15 +561,11 @@ const addDeal = async() => {
 };
 
 const handleNavBar = (navItem, button) => {
-  // let currentActives = $('li.nav-item>a:active');
   let currentActives = document.querySelectorAll('li.nav-item>a.active');
   navItem.classList.add("active");
   for (let i = 0; i < currentActives.length; i++) {
     currentActives[i].classList.remove("active");
   }
-//   button.onclick = function (event){
-//     event.preventDefault();
-//   };
 };
 
 // Show loading icon inside element identified by 'selector'.
@@ -614,13 +605,6 @@ const hideLoading = () => {
       });
     searchForm.onsubmit = getSearchResults;
 })()
-
-// const domain = 'fs-webdev.eu.auth0.com';
-// const audience = 'price_tracker';
-// const clientID = 'qfecxJQCicccSMa1KSVM8I6VP85NrYHV';
-// const callbackURL = 'http://localhost:5000/';
-// const scope = 'openid%20profile%20email';
-// {"nickname":"jimaimaharimna","name":"jimaimaharimna@gmail.com","picture":"https://s.gravatar.com/avatar/dbd032730a0fe9189070ee6e8cefc989?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fji.png","updated_at":"2021-09-04T01:43:20.307Z","email":"jimaimaharimna@gmail.com","email_verified":false,"sub":"auth0|6130edff4fb5980069cfe064"}
 
 
 ///////////////////////////////////////////////////////////////////////
