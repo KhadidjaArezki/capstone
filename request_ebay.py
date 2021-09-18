@@ -8,6 +8,11 @@ import xmltodict
 import json
 
 def search_ebay(keywords, filters, page):
+    '''
+    Receives search keywords and filters and formats 
+    a request to ebay. Returns a list of item objects
+    that match the search query or an empty list
+    '''
     category_id = filters['categoryId']
     location = filters['location']
     # Build item_filters list
@@ -44,7 +49,6 @@ def search_ebay(keywords, filters, page):
     siteid = "EBAY-US"
     api = Connection(domain='svcs.sandbox.ebay.com', config_file='ebay.yaml', siteid=siteid)
 
-    print(request)
     response = api.execute('findItemsAdvanced', request)
     results = response.reply.searchResult
     print('count' +results._count)
@@ -70,6 +74,10 @@ def search_ebay(keywords, filters, page):
         return search_results, totalItems
 
 def search_product(product_id):
+    '''
+    Sends a request to ebay to get info for a 
+    particular product to update its price
+    '''
     print('Inside getItem to update product price')
     xml = f"""<?xml version="1.0" encoding="utf-8"?>
             <GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">

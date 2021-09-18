@@ -7,18 +7,19 @@ ebay_auth = {
     'devid': '242e8a01-6fe5-4588-8ccb-7c4eb6e5618b'
 }
 
+environ['PROD_DATABASE_URL'] = 'postgresql://fcxbxawnnsvauw:44c5b88cda334ae537fb1713883480f3b46fdae73817f0dbfcf8f18580de0605@ec2-54-81-126-150.compute-1.amazonaws.com:5432/d6gjvlbk3cg3gi'
+environ['TEST_DATABASE_URL'] = 'postgresql://postgres:12345@localhost:5432/capstone'
+
+environ['AUTH0_DOMAIN'] = 'fs-webdev.eu.auth0.com'
+environ['ALGORITHMS'] = 'RS256'
+environ ['API_AUDIENCE'] = 'coffeeshop'
+
 # environ['database_owner'] = 'postgres'
 # environ['database_password'] = '12345'
 # environ['host'] = 'localhost:5432'
-# environ['production_database_name'] = "capstone"
-# environ['test_database_name'] = "capstone_test"
+# environ['database_name'] = "capstone"
 # environ['database_path'] = "postgresql://{}:{}@{}".format(
 #                             environ['database_owner'],
 #                             environ['database_password'],
 #                             environ['host'])
 
-environ['DATABASE_URL'] = 'postgresql://fcxbxawnnsvauw:44c5b88cda334ae537fb1713883480f3b46fdae73817f0dbfcf8f18580de0605@ec2-54-81-126-150.compute-1.amazonaws.com:5432/d6gjvlbk3cg3gi'
-
-environ['AUTH0_DOMAIN'] = 'fs-webdev.eu.auth0.com'
-environ['ALGORITHMS'] = 'RS256'
-environ ['API_AUDIENCE'] = 'coffeeshop'

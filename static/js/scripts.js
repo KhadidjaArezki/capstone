@@ -59,7 +59,7 @@ const processLoginState = async () => {
 const updateUI = async () => {
   console.log('Inside updateUI');
   isAuthenticated = await auth0.isAuthenticated();
-  // NEW - add logic to show/hide gated content after authentication
+  // Add logic to show/hide gated content after authentication
   if (isAuthenticated) {
 
     // Show logout and my alerts buttons
@@ -70,10 +70,8 @@ const updateUI = async () => {
 
     // Get and store user auth0 data
     token = await auth0.getTokenSilently();
-    // $("#ipt-access-token").html(token);
     window.localStorage.setItem('jwt', token);
     user = JSON.stringify(await auth0.getUser());
-    // $("#ipt-user-profile").html(user);
     window.localStorage.setItem('user', user);
     user = JSON.parse(user);
     user_id = user['sub'].substring(

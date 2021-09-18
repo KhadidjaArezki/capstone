@@ -5,10 +5,9 @@ from sqlalchemy.dialects.postgresql import TIME
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
+from datetime import datetime 
 
-# database_name = environ['production_database_name']
-# database_path = '{}/{}'.format(environ['database_path'], database_name)
-database_path = environ['DATABASE_URL']
+database_path = environ['PROD_DATABASE_URL']
 
 db = SQLAlchemy()
 
@@ -17,26 +16,83 @@ setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
 
-def setup_db(app):
+def setup_db(app, database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
     migrate = Migrate(app, db)
-    # db.create_all()
-
 
 '''
 db_drop_and_create_all()
     drops the database tables and starts fresh
     can be used to initialize a clean database
-    !!NOTE you can change the database_filename variable to have multiple verisons of a database
+    !!NOTE you can change the database_path variable to have multiple verisons of a database
 '''
 
-def db_drop_and_create_all():
-    # db.drop_all()
-    # db.create_all()
-    # add one demo row 
+def db_drop_and_create_all(db):
+    db.drop_all()
+    db.create_all()
+    
+    
+    # add one demo row for user, 2 alerts, 1 filter, 1 deal
+    
+    user = User(
+        user_id='112442572274179169362',
+        user_name='khadidjaarezki999',
+        email='khadidjaarezki999@gmail.com' 
+    )
+    user.insert()
+
+    filter_ = Filter(
+        name='category'
+    )
+    filter_.insert()
+
+    product1 = Product(
+        product_id='110538092605',
+        name='Laptop battery for DELL Latitude 6MT4T E5470 E5570 7.6V 62Wh',
+        link='https://cgi.sandbox.ebay.com/Laptop-battery-DELL-Latitude-6MT4T-E5470-E5570-7-6V-62Wh-/110538092605',
+        image='https://thumbs2.sandbox.ebaystatic.com/m/m24uZs-gnzxrtT1_19PUQxw/140.jpg',
+        initial_price=28.5,
+        current_price=28.0,
+        price_difference=0,
+        currency='USD',
+        last_updated=datetime.now(),
+        store='ebay'
+    )
+    product1.insert()
+
+    product2 = Product(
+        product_id='110538066270',
+        name='For 2020 MacBook Pro Air 13” A2338 A2337 laptop sleeve bag handbag carry pouch',
+        link='https://cgi.sandbox.ebay.com/2020-MacBook-Pro-Air-13-A2338-A2337-laptop-sleeve-bag-handbag-carry-pouch-/110538066270?var=0',
+        image='https://thumbs1.sandbox.ebaystatic.com/pict/04040_0.jpg',
+        initial_price=15.99,
+        current_price=15.99,
+        price_difference=0,
+        currency='USD',
+        last_updated=datetime.now(),
+        store='ebay'
+    )
+    product2.insert()
+
+    alert1 = Alert(
+        user_id=1,
+        desired_price=25.0,
+        product_id=1,
+        created=datetime.now()
+    )
+    alert1.insert()
+
+    alert2 = Alert(
+        user_id=1,
+        desired_price=25.0,
+        product_id=2,
+        created=datetime.now()
+    )
+    alert2.insert()
+
     deal = Deal(
             name='2021 Newest Dell Inspiron 3000 Laptop, 15.6 HD Display, Intel N4020 Processor, 16GB RAM, 512GB PCIe SSD, Online Meeting Ready, Webcam, WiFi, HDMI, Bluetooth, Win10 Home, Black',
             link='https://www.dell.com/en-us/shop/gaming-laptops/g15-gaming-laptop/spd/g-series-15-5510-laptop/gn5510eyrns',
@@ -46,13 +102,12 @@ def db_drop_and_create_all():
             store='dell'
     )
     deal.insert()
-    
 
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
 
-# Association table between Venue and Genre
+# Association table between users and products
 #----------------------------------------------------------------------------#
 user_products = db.Table('user_products',
     db.Column('user_id', db.INTEGER, db.ForeignKey('User.id'), primary_key=True),
@@ -119,6 +174,9 @@ class Deal(db.Model):
 
 
 class Product(db.Model):
+    '''A product is added when a user creates an alert 
+    for it. A product is updated periodically 
+    '''
     __tablename__ = 'Product'
 
     id = db.Column(db.INTEGER, primary_key=True)
@@ -179,6 +237,10 @@ class Product(db.Model):
 
 
 class Alert(db.Model):
+    '''
+    An alert is created by an authenticated 
+    user for a particular product
+    '''
     __tablename__= 'Alert'
     id = db.Column(db.INTEGER, primary_key=True)
     desired_price = db.Column(db.Float, nullable=False)
@@ -212,9 +274,10 @@ class Alert(db.Model):
 
 
 class User(db.Model):
+    '''A user is added at sign up '''
     __tablename__ = 'User'
     id = db.Column(db.INTEGER, primary_key=True)
-    user_id = db.Column(db.String(), nullable=False)
+    user_id = db.Column(db.String(), nullable=False, unique=True)
     user_name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
     alerts = db.relationship('Alert', back_populates='user')
@@ -244,6 +307,10 @@ class User(db.Model):
 
 
 class Filter(db.Model):
+    ''' 
+    Search filters are added by the manager
+    and admin to enhance search results precision
+    '''
     __tablename__ = 'Filter'
     id = db.Column(db.INTEGER, primary_key=True)
     name = db.Column(db.String(500), nullable=False, unique=True)
