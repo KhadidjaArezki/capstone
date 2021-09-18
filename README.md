@@ -43,7 +43,7 @@ The backend main modules are: app.py, modules.py, and request_ebay.py
 2. **Virtual Enviornment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
 
-3. **PIP Dependencies** - Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
+3. **PIP Dependencies** - Once you have your virtual environment setup and running, install dependencies by naviging to the project directory  and running:
 ``` pip install -r requirements.txt ```
 This will install all of the required packages we selected within the `requirements.txt` file.
 
