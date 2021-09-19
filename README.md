@@ -12,6 +12,10 @@ The landing page displays sponsered products added by the admin only.
 
 The website is hosted on [https://pricelee.herokuapp.com/](https://pricelee.herokuapp.com/)
 
+## Motivation 
+
+Finding a project idea took some time and consideration, as I had certain criteria that the project must satisfy. The project must make use of all the skills learned throughout this program, it must allow me to grow as a web developer - be somewhat challenging - and take me out of my comfort zone. This project idea stood out for me because it had the potential to develop to a real business idea and to allow me to pratice and improve my programming skills.
+
 # Frontend
 
 - This is a single page application. The frontend consists of a single html template, - rendered by the Jinja2 engine - in the templates folder, in addition to css and javascript folders in the static folder. Most of the functionality is written in vanilla javascript and occasionally JQuery. 
@@ -49,6 +53,7 @@ This will install all of the required packages we selected within the `requireme
 
 ## Configuration
 
+- Store you secrets in `setup.sh`.
 - Configure your app in `config.py`.
 Inside this file, setup environment variables to connect to your database server, configure your stores api and Auth0 credentials.
 - configure you Auth0 `/authorize` call in `auth_config.json`
@@ -57,11 +62,11 @@ Inside this file, setup environment variables to connect to your database server
 
 Create tables by running  ```flask db upgrade``` in your terminal.
 
-### Running the server
+## Running the server
 
 From within the project's main directory first ensure you are working using your created virtual environment.
 Each time you open a new terminal session, run:
-
+```source setup.sh``` to export you secrets, and then run:
 ``` export FLASK_APP=app.py ```
 
 To run the server, execute:

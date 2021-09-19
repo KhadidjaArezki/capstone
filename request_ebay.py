@@ -7,9 +7,10 @@ import urllib.parse
 import xmltodict
 import json
 
+
 def search_ebay(keywords, filters, page):
     '''
-    Receives search keywords and filters and formats 
+    Receives search keywords and filters and formats
     a request to ebay. Returns a list of item objects
     that match the search query or an empty list
     '''
@@ -17,7 +18,7 @@ def search_ebay(keywords, filters, page):
     location = filters['location']
     # Build item_filters list
     item_filters = []
-    if filters['min_price'] != '' :
+    if filters['min_price'] != '':
         item_filters.append(
             {
                 'name': 'minPrice',
@@ -47,11 +48,13 @@ def search_ebay(keywords, filters, page):
     #     siteid = location
     # else:
     siteid = "EBAY-US"
-    api = Connection(domain='svcs.sandbox.ebay.com', config_file='ebay.yaml', siteid=siteid)
+    api = Connection(domain='svcs.sandbox.ebay.com',
+                    config_file='ebay.yaml',
+                    siteid=siteid)
 
     response = api.execute('findItemsAdvanced', request)
     results = response.reply.searchResult
-    print('count' +results._count)
+    print('count' + results._count)
     totalItems = int(results._count)
     if totalItems == 0:
         return [], 0
@@ -63,9 +66,11 @@ def search_ebay(keywords, filters, page):
             item_object['product_store'] = 'ebay'
             item_object['product_name'] = item.title
             item_object['product_id'] = item.itemId
-            item_object['product_link'] = item.viewItemURL 
-            item_object['product_currency'] = item.sellingStatus.currentPrice._currencyId
-            item_object['product_price'] =  item.sellingStatus.currentPrice.value
+            item_object['product_link'] = item.viewItemURL
+            item_object['product_currency'] = \
+                item.sellingStatus.currentPrice._currencyId
+            item_object['product_price'] = \
+                item.sellingStatus.currentPrice.value
             try:
                 item_object['product_image'] = item.galleryURL
             except Exception:
@@ -73,9 +78,10 @@ def search_ebay(keywords, filters, page):
             search_results.append(item_object)
         return search_results, totalItems
 
+
 def search_product(product_id):
     '''
-    Sends a request to ebay to get info for a 
+    Sends a request to ebay to get info for a
     particular product to update its price
     '''
     print('Inside getItem to update product price')
@@ -92,7 +98,7 @@ def search_product(product_id):
     url = 'https://api.sandbox.ebay.com/ws/api.dll'
     req = Request(url)
     req.add_header('Content-Type', 'application/xml')
-    req.add_header('X-EBAY-API-COMPATIBILITY-LEVEL','1201')
+    req.add_header('X-EBAY-API-COMPATIBILITY-LEVEL', '1201')
     req.add_header('X-EBAY-API-DEV-NAME', ebay_auth['devid'])
     req.add_header('X-EBAY-API-APP-NAME', ebay_auth['appid'])
     req.add_header('X-EBAY-API-CERT-NAME', ebay_auth['certid'])
@@ -106,11 +112,14 @@ def search_product(product_id):
         print('COULDN\'T UPDATE PRODUCT')
         return 'not found'
     else:
-        current_price = response_json['GetItemResponse']['Item']['SellingStatus']['CurrentPrice']['#text']
+        current_price = response_json['GetItemResponse']\
+            ['Item']['SellingStatus']['CurrentPrice']['#text']
         return float(current_price)
 
     # totalItems = int(results._count)
 # request categories:
-# $ curl http://open.api.ebay.com/Shopping?callname=GetCategoryInfo&appid=Khadidja-pricetra-SBX-f3633a1dd-428cb13a&callbackname=cb_listCategorie
-# s&siteid=0&CategoryID=-1&version=729&IncludeSelector=ChildCategories&responseencoding=JSON
-
+# $ curl http://open.api.ebay.com/Shopping?
+# callname=GetCategoryInfo&appid=Khadidja-pricetra-SBX-f3633a1dd-428cb13a&c
+# allbackname=cb_listCategories
+# &siteid=0&CategoryID=-1&version=729&
+# IncludeSelector=ChildCategories&responseencoding=JSON

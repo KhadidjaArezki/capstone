@@ -1,10 +1,11 @@
 #!./env/Scripts/python
 import os
 import sys
-from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, send_file
+from flask import Flask, render_template, request,\
+     redirect, url_for, jsonify, abort, send_file
 from sqlalchemy import exc
 from sqlalchemy import and_
-from datetime import datetime 
+from datetime import datetime
 import json
 from flask_cors import CORS
 import logging
@@ -13,11 +14,13 @@ from auth.auth import AuthError, requires_auth
 from request_ebay import search_ebay, search_product
 import re
 
-from models import db, db_drop_and_create_all, setup_db, Deal, Product, Alert, User, Filter, database_path
+from models import db, db_drop_and_create_all, setup_db,\
+    Deal, Product, Alert, User, Filter, database_path
 
 logging.basicConfig(filename='error.log',
-                    level=logging.DEBUG, 
+                    level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
+
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -29,7 +32,8 @@ def create_app(test_config=None):
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
-                                'Origin, Accept, Content-Type, Authorization, true')
+                                '''Origin, Accept, Content-Type,
+                                Authorization, true''')
         response.headers.add('Access-Control-Allow-Methods',
                                 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
         response.headers.add('Access-Control-Allow-Origin', '*')
@@ -65,7 +69,7 @@ def create_app(test_config=None):
 
     def format_alerts(alert_objects):
         '''
-        Retrieves user's alerts and alert product from 
+        Retrieves user's alerts and alert product from
         database and returns a list of alert lbjects
         '''
         alerts = []
@@ -103,7 +107,7 @@ def create_app(test_config=None):
         end_page = start_page + ITEMS_PER_PAGE
         print(start_page, end_page)
         return search_results[start_page: end_page]
-        
+
     def get_deals():
         '''
         Returns a list of deals from the database
@@ -129,33 +133,36 @@ def create_app(test_config=None):
         last_updated = datetime.now()
 
         # Add product
-        product = Product(product_id=product_id, name=product_name, last_updated=last_updated,
-                        link=product_link, image=product_image, store=product_store,
-                        initial_price=product_initial_price, current_price=product_initial_price,
-                        currency=product_currency, price_difference=0.00)
+        product = Product(product_id=product_id, name=product_name,
+                            last_updated=last_updated, link=product_link,
+                            image=product_image, store=product_store,
+                            initial_price=product_initial_price,
+                            current_price=product_initial_price,
+                            currency=product_currency, price_difference=0.00)
         db.session.add(product)
         db.session.flush()
-        return (product)   
+        return (product)
 
     def update_product(product):
         '''
-        Sends request to store with the item id to get 
+        Sends request to store with the item id to get
         the current price and returns the updated product
         '''
         current_price = search_product(product.product_id)
         if current_price != 'not found':
             product.current_price = current_price
-            print('Update product success, new price = ', current_price)
-            product.price_difference = product.initial_price - product.current_price
+            print('Update product success,new price=', current_price)
+            product.price_difference = \
+                product.initial_price - product.current_price
             product_object = product
             product.update()
             return product_object
-        else: 
+        else:
             return None
 
     def check_user(request_json):
         '''
-        Verify that user is logged in and 
+        Verify that user is logged in and
         returns user object from the database
         '''
         if request_json is None:
@@ -173,7 +180,7 @@ def create_app(test_config=None):
     @app.route('/auth_config')
     def get_auth_config():
         '''
-        Sends auth0 configuration data to the 
+        Sends auth0 configuration data to the
         frontend to authenticate users
         '''
         return send_file('auth/auth_config.json')
@@ -192,9 +199,9 @@ def create_app(test_config=None):
         try:
             request_json = request.get_json()
             if request_json is None:
-                    raise exceptions.BadRequest()
+                raise exceptions.BadRequest()
             user_id = request_json['user_id']
-            # search user in database and store if not there 
+            # search user in database and store if not there
             user = User.query.filter_by(user_id=user_id).one_or_none()
             if user is None:
                 user_name = request_json['user_name']
@@ -231,10 +238,10 @@ def create_app(test_config=None):
             request_json = request.get_json()
             user = check_user(request_json)
             alert_objects = Alert.query.filter_by(
-                                        user_id=user.id
-                                    ).order_by(
-                                        Alert.created.desc()
-                                    ).limit(5).all()
+                            user_id=user.id
+                            ).order_by(
+                            Alert.created.desc()
+                            ).limit(5).all()
             recent_alerts = format_alerts(alert_objects)
             return jsonify({
                 "success": True,
@@ -242,7 +249,7 @@ def create_app(test_config=None):
                 "total_items": len(recent_alerts)
             })
         except exceptions.NotFound:
-                abort(404)
+            abort(404)
         except exceptions.InternalServerError:
             abort(500)
         except Exception as e:
@@ -252,7 +259,7 @@ def create_app(test_config=None):
     @app.route('/alerts', methods=['POST'])
     def get_alerts():
         '''
-        Retrieves user alerts from database 
+        Retrieves user alerts from database
         and returns a list of paginated alerts
         '''
         try:
@@ -270,9 +277,9 @@ def create_app(test_config=None):
                 "success": True,
                 "user-alerts": alerts,
                 "total_items": len(alerts)
-            }) 
+            })
         except exceptions.NotFound:
-                abort(404)
+            abort(404)
         except exceptions.InternalServerError:
             abort(500)
         except Exception as e:
@@ -284,7 +291,7 @@ def create_app(test_config=None):
     @app.route('/alerts/add', methods=['POST'])
     def add_alert():
         '''
-        Receives alert and product data from user and creates 
+        Receives alert and product data from user and creates
         a new alert and stores the product if it's not already stored
         '''
         try:
@@ -292,20 +299,24 @@ def create_app(test_config=None):
             user = check_user(request_json)
             product_id = request_json['product_id']
             # Check if product is stored
-            product = Product.query.filter_by(product_id=product_id).one_or_none()
+            product = Product.query.filter_by(
+                                    product_id=product_id
+                                    ).one_or_none()
 
             if product is None:
-                product = add_product(request_json, product_id)        
+                product = add_product(request_json, product_id)
             # Check if user hasn't made an alert for that product
             if product not in user.products:
                 user.products.append(product)
                 # Create Alert
                 desired_price = float(request_json['desired_price'])
-                alert = Alert(desired_price=desired_price, created=datetime.now(),
-                                user_id=user.id, product_id=product.id)
+                alert = Alert(desired_price=desired_price,
+                                created=datetime.now(),
+                                user_id=user.id,
+                                product_id=product.id)
 
                 db.session.add(alert)
-                db.session.commit()         
+                db.session.commit()
             return jsonify({
                 "success": True,
             })
@@ -365,7 +376,7 @@ def create_app(test_config=None):
     @app.route('/alerts', methods=['DELETE'])
     def delete_alert():
         '''
-        Receives alert id and deletes the 
+        Receives alert id and deletes the
         corresponding alert from db
         '''
         try:
@@ -411,7 +422,8 @@ def create_app(test_config=None):
             # if user is not None: store search keywords
             # store = filters['store']
             # if store == 'ebay':
-            search_results, total_items = search_ebay(keywords ,filters, page_number)    
+            search_results, total_items = search_ebay(keywords,
+                                            filters, page_number)
             paginated_results = paginate_results(search_results, page_number)
 
             return jsonify({
@@ -434,7 +446,7 @@ def create_app(test_config=None):
     @app.route('/filters', methods=['GET'])
     def get_search_filters():
         """
-        Retrieves filters from db and returns 
+        Retrieves filters from db and returns
         a list of available filters
         """
         try:
@@ -458,7 +470,7 @@ def create_app(test_config=None):
     @requires_auth('post:filters')
     def add_search_filter():
         '''
-        Receives filter data from post request and createsa new 
+        Receives filter data from post request and createsa new
         filter to store in db. This endpoint requires permissions
         '''
         try:
@@ -467,7 +479,7 @@ def create_app(test_config=None):
                 raise exceptions.BadRequest()
             filter_ = request_json['filter']
             # add filter to filters table
-            new_filter =  Filter(name=filter_)
+            new_filter = Filter(name=filter_)
             new_filter.insert()
             return jsonify({
                 "success": True,
@@ -488,13 +500,13 @@ def create_app(test_config=None):
             print(sys.exc_info())
         finally:
             db.session.close()
-          
+
     @app.route('/deals', methods=['POST'])
     @requires_auth('post:deals')
     def add_deal():
         """
-        Receives deal data from post request 
-        and creates a new deal to store in the db 
+        Receives deal data from post request
+        and creates a new deal to store in the db
         """
         try:
             request_json = request.get_json()
@@ -507,8 +519,9 @@ def create_app(test_config=None):
             deal_currency = request_json['deal_currency']
             deal_store = request_json['deal_store']
             # Add deal to deals table
-            deal = Deal(name=deal_name, link=deal_link, image=deal_image,
-                        price=deal_price, currency=deal_currency, store=deal_store)
+            deal = Deal(name=deal_name, link=deal_link,
+                            image=deal_image, price=deal_price,
+                            currency=deal_currency, store=deal_store)
             deal.insert()
 
             return jsonify({
@@ -530,7 +543,6 @@ def create_app(test_config=None):
         finally:
             db.session.close()
 
-
     # Error Handling
     '''
     Error handling for unprocessable entity
@@ -543,7 +555,6 @@ def create_app(test_config=None):
             "error": 422,
             "message": "unprocessable"
         }), 422
-
 
     '''
     Error handler for Not Found
@@ -592,8 +603,9 @@ def create_app(test_config=None):
             "error": 500,
             "message": "Internal Server Error"
         }), 500
-    
+
     return app
+
 
 app = create_app()
 

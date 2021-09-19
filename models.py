@@ -1,5 +1,5 @@
 import os
-from config import environ
+# from config import environ
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.dialects.postgresql import TIME
 from flask_sqlalchemy import SQLAlchemy
@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 import json
 from datetime import datetime 
 
-database_path = environ['PROD_DATABASE_URL']
+database_path = os.environ.get('PROD_DATABASE_URL')
 
 db = SQLAlchemy()
 
